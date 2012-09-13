@@ -1,14 +1,6 @@
-%% LyX 2.0.4 created this file.  For more info, see http://www.lyx.org/.
-%% Do not edit unless you really know what you are doing.
 \documentclass[english]{article}
-\usepackage[T1]{fontenc}
-\usepackage[latin9]{inputenc}
 \usepackage{geometry}
 \geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
-\usepackage{babel}
-\usepackage[unicode=true]
- {hyperref}
-\usepackage{breakurl}
 \begin{document}
 <<setup, include=FALSE, cache=FALSE>>=
 
@@ -43,9 +35,9 @@ with writing R code rather than relying on copying and pasting.
 \subsection{Getting \& Installing R}
 
 If you do not already have the R software, please download it from
-CRAN at: \href{http://www.r-project.org/}{http://www.r-project.org/}.
+CRAN at: {http://www.r-project.org/}.
 To improve use-ability, you may wish to use a script editor. We recommend
-using \href{http://rstudio.org/}{Rstudio}. Rstudio is nice because
+using Rstudio (http://rstudio.org/). Rstudio is nice because
 it generally integrates seamlessly with R without much setup required.
 
 
@@ -89,10 +81,10 @@ getwd()
 Now that we have our working directory assigned correctly, let's begin
 to setup our workspace with packages we will need. Packages are extensions
 of the basic R code that provide additional functionality. Usually
-each package is united around a common theme. For example, the \href{http://cran.r-project.org/web/packages/vegan/index.html}{vegan}
+each package is united around a common theme. For example, vegan package (http://cran.r-project.org/web/packages/vegan/index.html)
 package provides many functions designed for community ecology. Consequently,
 it is a good package to use when you need to carry out various multivariate
-statistical techniques. You can see the full list of packages \href{http://cran.r-project.org/web/packages/}{here}.
+statistical techniques. You can see the full list of packages here: http://cran.r-project.org/web/packages/
 
 You (should) only need to install packages one time. Here's how.
 
@@ -160,7 +152,7 @@ str(anolis2)
 If you have any questions about the options to include in your syntax,
 just access the help file as follows.
 
-<<>>=
+<<eval=FALSE>>=
 ?read.csv
 @
 
