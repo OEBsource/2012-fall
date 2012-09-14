@@ -1,5 +1,6 @@
 \documentclass[english]{article}
 \usepackage{geometry}
+\usepackage{hyperref}
 \geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
 \begin{document}
 <<setup, include=FALSE, cache=FALSE>>=
@@ -35,9 +36,9 @@ with writing R code rather than relying on copying and pasting.
 \subsection{Getting \& Installing R}
 
 If you do not already have the R software, please download it from
-CRAN at: {http://www.r-project.org/}.
+CRAN at: \href{http://www.r-project.org/}{http://www.r-project.org/}.
 To improve use-ability, you may wish to use a script editor. We recommend
-using Rstudio (http://rstudio.org/). Rstudio is nice because
+using \href{http://rstudio.org/}{RStudio}. Rstudio is nice because
 it generally integrates seamlessly with R without much setup required.
 
 
@@ -81,15 +82,15 @@ getwd()
 Now that we have our working directory assigned correctly, let's begin
 to setup our workspace with packages we will need. Packages are extensions
 of the basic R code that provide additional functionality. Usually
-each package is united around a common theme. For example, vegan package (http://cran.r-project.org/web/packages/vegan/index.html)
+each package is united around a common theme. For example, the \href{http://cran.r-project.org/web/packages/vegan/index.html}{vegan}
 package provides many functions designed for community ecology. Consequently,
 it is a good package to use when you need to carry out various multivariate
-statistical techniques. You can see the full list of packages here: http://cran.r-project.org/web/packages/
+statistical techniques. You can see the full list of packages \href{http://cran.r-project.org/web/packages/}{here.}
 
 You (should) only need to install packages one time. Here's how.
 
 <<eval=F>>=
-#you will need to set the CRAN mirror
+#you will need to set the CRAN mirror the first time you run this
 install.packages('vegan')
 @
 
@@ -115,7 +116,7 @@ file you're going to import. To import a {*}.txt file, use the following.
 geospiza<-read.table('geospiza.txt',header=T)
 @
 
-The read.table syntax allows you to import many different file types.
+The "read.table" syntax allows you to import many different file types.
 For example, we can also read in a {*}.csv file with this function.
 
 <<>>=
@@ -136,14 +137,20 @@ of the imported data.
 head(anolis) 
 @
 
-We can use slightly different syntax to import the anolis file.
+You can edit this syntax to look at fewer (or more) rows.
+
+<<>>=
+head(anolis, n=3)
+@
+
+Now back to importing. We can use slightly different syntax from before to import the "anolis" file.
 
 <<>>=
 anolis2<-read.csv('anolis.missing.csv',header=T,na.strings='')
 @
 
 To double-check that this performed as well as the previous syntax
-to read in the anolis file, use the following syntax again.
+to read in the "anolis" file, use the following syntax again.
 
 <<>>=
 str(anolis2)
@@ -156,21 +163,24 @@ just access the help file as follows.
 ?read.csv
 @
 
-You will have noticed that we have been using arrows to assign the
-data we read in to variable names. You can also use equal signs. Run
-the following code to prove it to yourself.
+That's all for now. Below are some exercises that review some of the concepts covered in this lesson. Stay tuned for our next document!
 
-<<>>=
-anolis.new=read.table('anolis.missing.csv',header=T,sep=',',na.strings='')
-head(anolis.new)
-@
+\section{Exercises}
 
-Note that the anolis.new file is thus the same as the original anolis
-file. We used an equal sign read in this file, as opposed to the arrow.
-Otherwise the syntax was the same. That said, use the arrow syntax
-whenever possible, because in some very old versions of R (and old
-packages), the arrow and equal-sign syntax are actually not equitable.
+\subsection{In-class}
 
-Stay tuned for our next document that covers more about data handling
-and manipulation. Happy R-ing!
+\begin{enumerate}
+  \item Read in "batbrains.csv" using the function read.csv, assign it to a variable name, make sure R knows it has a header row, and correctly assign the missing data.
+  \item Use the function "tail" to examine the last 10 rows of "batbrains" to make sure the import was done correctly.
+\end{enumerate}
+
+\subsection{Take-home}
+\begin{enumerate}
+  \item Successfully install the "ape" package, and load it into your working memory.
+  \item Read in "carni.txt", assign it to a variable name, make sure it has a header row, and correctly assign missing data.
+  \item Read a dataset of your own into R, and ensure that it was imported correctly (e.g. by using "str", "head", etc.)
+\end{enumerate}
+
+
 \end{document}
+
