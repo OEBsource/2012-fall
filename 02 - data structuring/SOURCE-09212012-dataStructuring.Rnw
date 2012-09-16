@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+
+\begin{document}
+<<setup, include=FALSE, cache=FALSE>>=
+
+opts_chunk$set(fig.path='figure/manual-',cache.path='cache/manual-',fig.align='center',fig.show='hold', par=TRUE)
+
+options(replace.assign=TRUE, width=68)
+@
+
+
+\title{Data Structuring}
+
+
+\author{T. Eiting, M. Rosario, C.-Y. Kuo}
+
+
+\date{09.21.2012}
+
+\maketitle
+
+\section{Introduction}
+
+
+\subsection{Welcome}
+
+This document covers the basics of how to structure your data. This includes things like performing transformations in your data, substituting other values for NAs, dropping rows or columns from your dataset, merging datasets, etc. As part of this, we discuss how to make simple vectors and other types of data, and how to index your dataset so that you can tell R to apply some function to a specific cell (or cells) within your dataset. If you are following along on your own, we recommend typing the code yourself, so that you become familiar with the nuts and bolts.
+
+
+\end{document}
