@@ -1,0 +1,154 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+
+\begin{document}
+<<setup, include=FALSE, cache=FALSE>>=
+
+opts_chunk$set(fig.path='figure/manual-',cache.path='cache/manual-',fig.align='center',fig.show='hold', par=TRUE)
+
+options(replace.assign=TRUE, width=68)
+@
+
+
+\title{Data Structuring}
+
+
+\author{T. Eiting, M. Rosario, C.-Y. Kuo}
+
+
+\date{09.21.2012}
+
+\maketitle
+
+\section{Introduction}
+
+
+\subsection{Welcome}
+
+This document covers the basics of how to structure your data. This includes things like performing transformations in your data, substituting other values for NAs, dropping rows or columns from your dataset, merging datasets, etc. As part of this, we discuss how to make simple vectors and other types of data, and how to index your dataset so that you can tell R to apply some function to a specific cell (or cells) within your dataset. If you are following along on your own, we recommend typing the code yourself, so that you become familiar with the nuts and bolts.
+
+\subsection{Getting Started}
+
+Let's briefly bring our R session up to where we left off last time.
+<<echo=TRUE>>=
+#clear our your workspace
+rm(list=ls())
+
+#set your working directory
+setwd('D:/R')
+
+#check to make sure your working directory is correct
+getwd()
+
+#read in batbrains
+geospiza<-read.table("geospiza.txt",sep='',header=T,na.strings='')
+
+#check to make sure import was done correctly
+str(geospiza)
+@
+
+\section{Data Structuring}
+
+After you have brought in your data, chances are very high that there will be at least some actions you need to take before you proceed with your analyses, such as applying a log transformation to one of your variables. All of these things we refer to as "data structuring" because you are structuring your dataset so that it is ready for analysis.
+
+\subsection{Attaching and indexing your data}
+
+Fundamental to the many types of "structuring" functions is an ability to refer to specific rows, columns, and cells in your dataset. This ability is known as indexing. Type the following code, and notice the output.
+
+<<>>=
+geospiza[,4]
+@
+
+If you compare that with the actual dataset, you will see that you just reproduced column 4 from the dataset (i.e. beak depth). Another way to perform this \textbf{exact same operation} is to use the following code.
+<<>>=
+geospiza$beakD
+@
+
+Similar to the column indexing, you can refer just to a row, or a set of rows.
+<<>>=
+geospiza[7:9,]
+@
+
+If you are going to be using a particular dataset to do lots of transformations, stats, or whatever, it could be a good idea to "attach" that dataset so that you don't always have to use the name of the dataset in your indexing.
+
+<<>>=
+attach(geospiza)
+
+#now, just type the name of the variable, e.g. "brain_size," and see what happens
+beakD
+@
+
+Notice that we did not need to type the full name of the dataset to refer to our variable. The usefulness of this will become more apparent as you continue coding.
+\textbf{CAUTION: make sure to "detach" your dataset when you are done using it}. This will ensure that you do not wind up doing transformations or other operations to data that you didn't mean to.
+<<>>=
+detach(geospiza)
+
+#now verify that it was detached. You should get an error when typing the following
+beakD
+@
+
+\subsection{Transforming Variables and Adjusting your Dataset}
+
+Now let's take it one step further. Say we wanted to prepare a dataset to be included as an appendix to a publication. But in this case we want to exclude "beakD" because we wound up not using it in any of our analyses. One easy way to exclude this variable is as follows.
+
+<<>>=
+geospiza.apx <- geospiza[,-4]
+
+#to double-check that our new dataset does in fact exclude beakD
+str(geospiza.apx)
+@
+
+In this hypothetical example, not only did we want to drop beak depth, but we also needed to log-transform tarsus length. Here's the code of how to log-transform tarsus length and append it to the end of the dataset.
+<<>>=
+geospiza.apx$logTarsus <- log(geospiza.apx$tarsusL)
+str(geospiza.apx)
+@
+
+Instead of appending the new log variable, you could have replaced the original tarsus length with log-tarsus length. We'll do this to the original "geospiza" dataset. Here's how.
+<<>>=
+#create a duplicate of the dataset so we don't modify the original
+geospiza.test <- geospiza
+
+#perform the transformation and store it in the position of the original variable
+geospiza.test$tarsusL <- log(geospiza.test$tarsusL)
+
+#rename the variable to reflect your change
+names(geospiza.test)[2] <- "logTarsusL"
+
+head(geospiza.test, n =3)
+@
+
+Let's say you later collected some data on the habitat of your various species. You discovered that most of your \textit{Geospiza} species prefer to live and forage near the ground. The only species that don't are \textit{G. magnirostris}, \textit{G. fortis}, \textit{G. fusca}, and \textit{G. parvulus}, who prefer to live and forage around the tops of the shrubs. You will code these two preferences as "ground" and "shrub," and add them back into your dataset. Here's one way to do this.
+
+<<>>=
+#we will use the concatenation function, "c", to perform this task
+geospiza.apx$habitat <- c("shrub","ground","ground","ground","shrub","ground","ground","shrub","shrub","ground","ground","ground","ground")
+
+#check to make sure all of the new values were correctly applied
+geospiza.apx
+
+#also be sure that the structure of your new variable is correct
+str(geospiza.apx)
+@
+
+Finally, if we want to write out our new file as a *.csv, use this code.
+<<eval=FALSE>>=
+write.csv(x=geospiza.apx, file="geospiza_appendix.csv")
+@
+
+\section{Exercises}
+
+\subsection{In-class}
+
+\begin{enumerate}
+  \item Import "CYAnoles.csv," attach the data frame, log-transform "pdiameter" and append it to the end of your dataset.
+\end{enumerate}
+
+\subsection{Take-home}
+\begin{enumerate}
+  \item Using the "CYAnoles.csv" dataset again, make a new variable (call it whatever you want) that is the product of "pheight" and "pdiameter." Then, drop the original "pheight" and "pdiameter" from the dataset.
+\end{enumerate}
+
+\end{document}
