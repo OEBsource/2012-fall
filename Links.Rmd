@@ -1,0 +1,13 @@
+SOURCE Links
+========================================================
+
+
+Online Resources
+----------------
+- [R-bloggers](http://www.r-bloggers.com/), An often-updated site that has tons of helpful R tips and hints from around the web.
+- [Quick-R](http://www.statmethods.net/), Concise introduction to R basics, designed especially for people transitioning to R.
+
+
+Workshops, Courses, Etc.
+------------------------
+- [Introductory Stats with R](http://www.umass.edu/issr/research/workshops/20121029_R.php) by the UMass Institute for Social Science Research
