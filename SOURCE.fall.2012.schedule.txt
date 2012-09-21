@@ -2,7 +2,8 @@ SOURCE Fall 2012 Schedule
 
 09/14 Data.Handling
 09/21 Data.Structuring
-09/28 Functions
-10/05 Statistical.Tests
-10/12 Plotting
-10/19 ggplot2
+09/28 Statistical Tests
+10/05 Plotting
+10/12 Functions
+10/19 Review
+10/26 ggplot2
