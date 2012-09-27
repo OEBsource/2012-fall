@@ -1,0 +1,215 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+
+\begin{document}
+<<setup, include=FALSE, cache=FALSE>>=
+
+opts_chunk$set(fig.path='figure/manual-',cache.path='cache/manual-',fig.align='center',fig.show='hold', par=TRUE)
+
+options(replace.assign=TRUE, width=68)
+@
+
+
+
+\title{Basic Statistics and Graphics I}
+
+
+\author{C.-Y. Kuo, T. Eiting, M. Rosario}
+
+\date{09.28.2012}
+
+\maketitle
+
+\section{Introduction}
+
+
+\subsection{Welcome}
+
+This document covers the first part of doing basic statistics and
+graphics in R without installing any external packages. It includes
+descriptive statistics, checking for normality of data with statistical
+and graphical methods, performing t-tests and nonparametric two-group
+comparisons. 
+
+
+\subsection{Getting started}
+
+It's always good to make sure that the workspace is empty when you
+start R. We also need to set our working directory. Then we can read
+in the data file.
+
+<<echo=TRUE>>=
+#clear workspace
+rm(list=ls())
+
+#set working directory
+setwd("D:/R")
+#make sure the working directory is set up right
+getwd()
+
+#read in data file CYAnoles.csv
+anoles<-read.csv("CYAnoles.csv",header=T,na.string="")
+#make sure the data file was read in correctly
+head(anoles)
+@
+
+
+\section{Basic statistics and graphics }
+
+After importing data into R, we can begin to explore the data. In
+this section we follow the steps of how statistical analyses are routinely
+performed by starting from descriptive statistics, checking for normality
+of the data and data transformation. At the end of this section, we
+will compare the means of a variable between two groups using both
+parametric and nonparametric methods.
+
+
+\subsection{Descriptive statistics and graphics}
+
+First, we would like to know a few things about the variable of interest.
+For example, what are the means, standard deviation, ...etc? 
+
+<<echo=TRUE>>=
+#attach dataframe 
+attach(anoles)
+#get the mean, median, variance, standard deviation, and the quantiles for the variable pdiameter
+mean(pdiameter,na.rm=T)
+median(pdiameter)
+var(pdiameter)
+sd(pdiameter)
+quantile(pdiameter)
+@
+
+We can also use the function ``summary'' to get the values of mean,
+median and the quantiles all at once. 
+
+<<echo=TRUE>>=
+summary(pdiameter)
+@
+
+(You might have noticed that we did not demonstrate how to obtain
+mode and standard error. The reason is that there is no built-in functions
+to obtain them in R. We have to write custom functions for that purpose.)
+
+We can also examine the central tendency and dispersion of our data
+using boxplots.
+
+<<echo=TRUE>>=
+#creating a boxplot for pdiameter
+boxplot(pdiameter)
+@
+
+
+\subsection{Checking the normality of data}
+
+It is crucial to check if the data points are normally distributed
+before performing any statistical analyses. There are various statistical
+and graphical methods that allow us to assess the normality of our
+data. The statisitcal test we will introduce here is the Shapiro-Wilk
+Normality Test.
+
+<<echo=TRUE>>=
+#Use Shapiro-Wilk test on pdiameter
+shapiro.test(pdiameter)
+@
+
+You are testing for a significant \textit{difference} from normality. Since the p-value is way lower than 0.05, pdiameter is very likely
+not normally distributed.
+
+Another way to check for normality is using a graphical method called
+Q-Q plot (Q-Q stands for quantile versus quantile).
+
+<<echo=TRUE>>=
+#Use Q-Q plot on pdiameter
+qqnorm(pdiameter)
+@
+
+If the data is normally distributed, we should see a perfectly straight
+line. In other words, the more the data distribution deviates from
+normality, the less straight the line would be. From the Q-Q plot,
+again it seems that pdiameter is not normally distributed. 
+
+When the data deviates too much from normal distribution, it can be
+problematic to apply parametric statistics. One solution is data transformation.
+There are various options for data transformation. Which option is
+the most appropriate depends on the property of the data and is beyond
+the scope of this document. Here, we use square root transformation
+on pdiameter.
+
+<<echo=TRUE>>=
+#square root transform pdiameter and make a new variable in the anoles.tail dataset
+anoles$sqrt.pdiameter<-sqrt(pdiameter)
+#detach and then re-attach anoles.tail so that the changes we made can take effect
+detach(anoles)
+attach(anoles)
+#make sure the new variable is in the dataset
+head(anoles)
+@
+
+We can use Shapiro-Wilk test or Q-Q plot again to see if square root
+transformed pdiameter conforms better to normal distribution.
+
+<<echo=TRUE>>=
+#use Shapiro-Wilk test on square root transformed pdiameter
+shapiro.test(sqrt.pdiameter)
+#the Q-Q plot of untransformed vs. transformed pdiameter
+par(mfrow=c(1,2))
+qqnorm(pdiameter)
+qqnorm(sqrt.pdiameter)
+@
+
+It appears that the data transformation helped!
+
+
+\subsection{Two-group comparisons: t-test and Wilcoxon test}
+
+Now we would like to see whether the means of sqrt.pdiameter differ
+between lizards with and without tails. To do so, we can use a t-test.
+
+<<echo=TRUE>>=
+#before conducting a t-test, we have to know whether the two groups to be compared have the same variance
+var.test(sqrt.pdiameter~tail)
+#the var.equal argument specifies whether the two groups have the same variamnce;
+#the paired augument specifies whether a paired t-test is performed;
+#the alternative augument specifies whether it is a one-sided or two-sided test
+t.test(sqrt.pdiameter~tail,var.equal=T,paired=F,alternative="two.sided")
+@
+
+If the data distribution deviates from normality even after data transformation,
+we can use a nonparametric test to compare the means between two groups,
+such as the Wilcoxon test.
+
+<<echo=TRUE>>=
+wilcox.test(sqrt.pdiameter~tail)
+@
+
+Judging from the p-values, lizards with and without tails do not differ
+in sqrt.pdiameter.
+
+
+\section{Exercises}
+
+
+\subsection{In-class}
+\begin{enumerate}
+\item Obtain the mean and standard deviation of the variable "pheight" in
+the CYAnoles dataset. Make a boxplot to examine data distribution of pheight.
+\item Use both Shapiro-Wilk test and Q-Q plot to see whether pheight is
+normally distributed. If not, square-root transform "pheight" and add
+the new variable into the dataset. Write out the dataset (now with
+a new variable) as a csv file. PLEASE KEEP THIS NEW FILE! We will
+be using it next week.
+\item Repeat 2 to test whether the square root transformed pheight is normally
+distributed.
+\end{enumerate}
+
+\subsection{Take-home}
+\begin{enumerate}
+\item Based on the results of normality tests, use either a t-test or a
+Wilcoxon test to compare the means of square-root transformed "pheight"
+between lizards with and without tails. Interpret the results.\end{enumerate}
+
+
+\end{document}
