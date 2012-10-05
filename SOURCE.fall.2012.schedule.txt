@@ -4,6 +4,6 @@ SOURCE Fall 2012 Schedule
 09/21 Data.Structuring
 09/28 Statistical Tests
 10/05 Statistical Tests 2
-10/12 ggplot2
+10/12 ggplot2 (Justin!)
 10/19 Functions
 10/26 Review (?)
