@@ -1,0 +1,133 @@
+\documentclass{article}
+\usepackage{geometry}
+\usepackage{hyperref}
+\geometry{verbose,tmargin=2.5cm,bmargin=2.5cm,lmargin=2.5cm,rmargin=2.5cm}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+<<setup, include=FALSE, cache=FALSE>>=
+  require(knitr)
+opts_chunk$set(fig.path='figure/manual-',cache.path='cache/manual-',fig.align='center',fig.show='hold', par=TRUE)
+
+options(replace.assign=TRUE, width=68)
+@
+
+
+\title{Advanced looping}
+
+\author{M. Rosario, T. Eiting, C.-Y. Kuo}
+
+
+\date{10.26.2012}
+
+\maketitle
+``Loopers are well paid, they lead a good life...''- Joe from trailer of Looper
+\section{Introduction}
+
+
+\subsection{}
+
+One of the main advantages of learning how to handle your data in R or any other programming language is the ability to automate repetitive tasks. Last week, we learned how to organize our code into simple functions in order to reduce the number of tasks, however there is another way to approach the problem of data processing automation involving loops. Although we were introduced to loops in our lesson on functions, we just barely scratched the surface of using loops to solve problems. In this weeks lesson, we’ll learn more about how we can use loops to extend our R functionality to perform some complex, but useful, tasks.
+
+\subsection{Basics of the for loop}
+The idea of a loop is actually very simple: we create a temporary variable (usually named i), and run all the code in the following curly brackets changing the value of i each time until we run out of values. Here is a simple example that uses a for loop to print out the numbers 1 through 10.
+
+<<function-example, eval=F>>=
+#creating a function
+for(i in 1:10){
+  print(i)
+}
+@
+
+By now, the example above should be familiar. We start with i=1, we print the number that i currently equals, and we continue until i=10. This example is useful for understanding how a loop works, but now let's spend some time in exploring how the for loop can be useful in handling and processing your data.
+  
+\section{Advanced uses of the for loop}
+\subsection{Calculating centers of mass of a moving object}
+Suppose we have 2 sets x,y data over time from a high speed video of an ant spinning through air. These datasets are available on the gitbub website and are named antHead.txt and antAbdomen.txt. Though this animal is spinning, what we would like to do is at each time step (row of the datasets) calculate the center of mass of the ant by taking the average of the x values and the average of the y values of the head and abdomen locations. We can do this by employing the for loop in the following way:
+
+<<ant-code-readin>>=
+#read in data
+antAb=read.table("antAb.txt",header=T)
+antHead=read.table("antHead.txt",header=T)
+
+#check data
+str(antAb)
+str(antHead)
+
+@
+
+What we need to do is to iterate row by row and to calculate the mean of the x values of head and abdomen as well as calculate the y values of the head and abdomen. In order to do this, we can use a for loop, but we need to setup an empty output vector which we can use to save our calculations to. We will call these vectors centerX and centerY.
+
+<<ant-for-loop>>=
+#setup empty output vectors of appropriate length
+centerX=rep(NA,length=nrow(antAb))
+centerY=centerX
+
+for(i in 1:nrow(antAb)){
+  centerX[i]=(antAb$X[i]+antHead$X[i])/2
+  centerY[i]=(antAb$Y[i]+antHead$Y[i])/2
+}
+
+output=data.frame(x=centerX,y=centerY)
+head(output)
+
+@
+
+\subsection{Using different i's}
+It's important to note that your values of i don't have to be sequential integers. For example, We talked breifly last week about how we could replace our "1:10" statement instead with a sequence function. Another clever manipulation of the iterative value is using a vector of column names of a dataset in order to perform column operations. To demonstrate this idea, we'll look at the geospiza dataset from a previous lesson. What if we were interested in the range of each column? In that case, we would want to go from column to column and find the difference of the max and min values.
+
+<<geospiza>>=
+geospiza=read.table("geospiza.txt",header=T)
+str(geospiza)
+
+#need a vector of column names
+colNames=names(geospiza)
+colNames  #note that this is a vector of characters
+
+#setup output
+output=rep(NA,length=length(colNames))
+#still need an iterator
+j=1
+
+for(i in colNames){
+  tempRange=max(geospiza[i])-min(geospiza[i])
+  output[j]=tempRange
+  j=j+1
+}
+
+output
+@
+
+\subsection{Nested loops}
+In the above example, we used two different iteration variables (i and j) to attack our problem. We can also use two different iteration variables to help navigate and perform calculations on a matrix. Often we nest loops within loops when we want to include an element of simulation as well. Let's build off last week's idea of generating random walks by using a nested loop to generate multiple random walks with one block of code. Also, instead of using i and j, we'll use more descriptive variables in our loops to prevent confusion as our code grows.
+
+<<random-walk>>=
+#setup our output to be a matrix, each row representing a different simulation
+numberOfSims=10
+time=10
+
+output=matrix(data=NA,nrow=numberOfSims,ncol=time)
+
+for(simNum in 1:numberOfSims){ #for 10 simulations
+  #code for a random walk should go in here
+  x=1:time
+  y=rep(0,length=time)
+  
+  for(t in 2:time){
+    y[t]=y[t-1]+sample(x=c(-1,1),size=1)
+  }
+#save our result to our output
+  output[simNum,]=y
+}
+
+output
+@
+
+\section{Exercises}
+\begin{enumerate}
+  \item Using a double-nested loop, create a 10x10 multiplication table.
+  \item Convert our looped-random walk code into a function with inputs numberOfSims and time.
+\end{enumerate}
+
+
+\end{document}
